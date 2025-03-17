@@ -28,6 +28,7 @@ function flipCoin() {
         flipButton.disabled = false;
         
         // Set final rotation based on outcome
+        // For Head: complete rotations (360 * n), For Tail: complete rotations + 180 degrees
         coin.style.transform = `rotateY(${outcome === 'Head' ? '720deg' : '900deg'})`;
     }, 1000);
 }
