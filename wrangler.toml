@@ -3,4 +3,13 @@ main = "src/worker.js"
 compatibility_date = "2024-03-17"
 
 [site]
-bucket = "./" 
+bucket = "."
+
+[build]
+command = ""
+
+[build.upload]
+format = "service-worker"
+
+[env.production]
+vars = { } 

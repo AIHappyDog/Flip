@@ -49,12 +49,12 @@ h1 {
 }
 
 .heads {
-    background-image: url('images/heads.png');
+    background-image: url('images/Head.png');
     transform: rotateY(0deg);
 }
 
 .tails {
-    background-image: url('images/tails.png');
+    background-image: url('images/Tail.png');
     transform: rotateY(180deg);
 }
 
