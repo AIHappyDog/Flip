@@ -8,50 +8,32 @@ export default {
       path = '/index.html';
     }
 
+    // Remove leading slash for asset lookup
+    const assetPath = path.startsWith('/') ? path.slice(1) : path;
+    
+    // Log the requested path for debugging
+    console.log('Requested path:', assetPath);
+    
     try {
-      // Remove leading slash for asset lookup
-      const assetPath = path.startsWith('/') ? path.slice(1) : path;
-      
-      // Log the requested path for debugging
-      console.log('Requested path:', assetPath);
-      
-      // Try to fetch the asset
-      const asset = await env.ASSETS.fetch(new Request(url.origin + '/' + assetPath));
-      
-      // Clone the response to modify headers
-      const response = new Response(asset.body, asset);
-      
-      // Set appropriate content type based on file extension
-      if (assetPath.endsWith('.html')) {
-        response.headers.set('Content-Type', 'text/html');
-      } else if (assetPath.endsWith('.css')) {
-        response.headers.set('Content-Type', 'text/css');
-      } else if (assetPath.endsWith('.js')) {
-        response.headers.set('Content-Type', 'application/javascript');
-      } else if (assetPath.endsWith('.png')) {
-        response.headers.set('Content-Type', 'image/png');
-      }
-      
-      // Add CORS headers
-      response.headers.set('Access-Control-Allow-Origin', '*');
-      
-      return response;
+      // Try to fetch the asset directly without modifying the URL
+      const asset = await env.ASSETS.fetch(request);
+      return asset;
     } catch (e) {
       console.error('Error fetching asset:', e);
-      console.error('Failed path:', path);
       
-      // Try to fetch index.html as fallback
-      try {
-        const indexAsset = await env.ASSETS.fetch(new Request(url.origin + '/index.html'));
-        return new Response(indexAsset.body, {
-          headers: { 'Content-Type': 'text/html' }
-        });
-      } catch (indexError) {
-        return new Response('Not Found: ' + path, { 
-          status: 404,
-          headers: { 'Content-Type': 'text/plain' }
-        });
+      // If the asset is not found, try index.html
+      if (path !== '/index.html') {
+        try {
+          // Create a new request for index.html
+          const indexRequest = new Request(url.origin + '/index.html');
+          const indexAsset = await env.ASSETS.fetch(indexRequest);
+          return indexAsset;
+        } catch (indexError) {
+          console.error('Error fetching index.html:', indexError);
+          return new Response('Not Found', { status: 404 });
+        }
       }
+      return new Response('Not Found', { status: 404 });
     }
   },
 }; 

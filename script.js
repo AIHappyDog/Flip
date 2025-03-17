@@ -20,7 +20,7 @@ function flipCoin() {
     
     // Generate random result
     const random = Math.random();
-    const outcome = random < 0.5 ? 'Heads' : 'Tails';
+    const outcome = random < 0.5 ? 'Head' : 'Tail';
     
     // Update result after animation
     setTimeout(() => {
@@ -28,6 +28,6 @@ function flipCoin() {
         flipButton.disabled = false;
         
         // Set final rotation based on outcome
-        coin.style.transform = `rotateY(${outcome === 'Heads' ? '720deg' : '900deg'})`;
+        coin.style.transform = `rotateY(${outcome === 'Head' ? '720deg' : '900deg'})`;
     }, 1000);
 }
